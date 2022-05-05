@@ -5,6 +5,10 @@ export const getPokemonByUrl = async (url: string) => {
 	const resp = await axios.get(url);
 	return resp;
 };
+export const getPokemonByName = async (name: string) => {
+	const resp = await axios.get(`${apiPath}pokemon/${name}`);
+	return resp.data;
+};
 
 export const getPokemons = async (limit: number = 10, offset: number = 0) => {
 	const resp = await axios.get(

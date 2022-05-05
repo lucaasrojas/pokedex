@@ -1,6 +1,7 @@
 import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Typography, Grid, Box } from "@mui/material";
-import { PokemonGrid } from "./Components";
+import { PokemonGrid, PokemonDetail } from "./Components";
 import "./App.css";
 
 function App() {
@@ -12,8 +13,16 @@ function App() {
 			<main className="App-main">
 				<Grid container>
 					<Grid item xs={12}>
-            <PokemonGrid/>
-          </Grid>
+						<BrowserRouter>
+							<Routes>
+								<Route path="/" element={<PokemonGrid />} />
+								<Route
+									path="/:name"
+									element={<PokemonDetail />}
+								/>
+							</Routes>
+						</BrowserRouter>
+					</Grid>
 				</Grid>
 			</main>
 		</Box>
