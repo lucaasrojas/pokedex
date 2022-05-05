@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { getPokemons } from "../api";
 import { Grid, Paper, Typography, Pagination } from "@mui/material";
 import { NumberLiteralType } from "typescript";
+import { PokemonContext } from "../context/PokemonContext";
 interface Data {
 	results: any[];
 }
@@ -21,7 +22,7 @@ const calculateOffset = (actualPage: number, perPage: number) => {
 };
 
 const PokemonGrid = () => {
-	const [data, setData] = React.useState<Data>({ results: [] });
+	const { list, setList } = useContext(PokemonContext);
 	const [pagination, setPagination] = React.useState<IPagination>({
 		count: 0,
 		offset: 0,
@@ -29,19 +30,19 @@ const PokemonGrid = () => {
 		pages: 1,
 	});
 	React.useEffect(() => {
-		if (!Boolean(data?.results?.length)) {
+		if (!Boolean(list?.length)) {
 			getPokemons().then((res: any) => {
-				setData({ results: res.results });
+				setList(res.results);
 				setPagination((prev: any) => ({
 					...prev,
 					count: res.count,
 				}));
 			});
 		}
-	}, [data]);
+	}, [list, setList]);
 	React.useEffect(() => {
 		getPokemons(pagination.limit, pagination.offset).then((res: any) => {
-			setData({ results: res.results });
+			setList(res.results);
 			setPagination((prev: any) => ({
 				...prev,
 				count: res.count,
@@ -59,12 +60,12 @@ const PokemonGrid = () => {
 		setPagination(newPagination);
 	};
 
-	if (!data || !pagination) return null;
+	if (!Boolean(list.length) || !pagination) return null;
 	return (
 		<Grid container>
 			<Grid item xs={12}>
 				<Grid container>
-					{data?.results.map((el: any) => (
+					{list.map((el: any) => (
 						<Grid
 							key={el.id}
 							item
@@ -117,7 +118,10 @@ const PokemonGrid = () => {
 			</Grid>
 			<Grid item xs={12}>
 				<Pagination
-					count={calculatePageCount(pagination.count, pagination.limit)}
+					count={calculatePageCount(
+						pagination.count,
+						pagination.limit
+					)}
 					onChange={handlePageChange}
 				/>
 			</Grid>

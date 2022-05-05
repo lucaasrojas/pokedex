@@ -1,29 +1,9 @@
 import React from "react";
-import { Grid, Paper, Typography,LinearProgress  } from "@mui/material";
+import { Grid, Paper, Typography, LinearProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { getPokemonByName } from "../api";
-interface Ability {
-	ability: {
-		name: string;
-		url: string;
-	};
-	is_hidden: boolean;
-	slot: number;
-}
+import { Pokemon, Ability, Stat } from "../interfaces";
 
-interface Stat {
-	base_stat: number;
-	effort: number;
-	stat: {
-		name: string;
-		url: string;
-	};
-}
-interface Pokemon {
-	name: string;
-	abilities: Ability[];
-	stats: Stat[];
-}
 const PokemonDetail = () => {
 	const params = useParams();
 	const [pokemon, setPokemon] = React.useState<Pokemon>();
@@ -64,12 +44,15 @@ const PokemonDetail = () => {
 							Stats
 						</Typography>
 						{pokemon.stats.map((el: Stat) => (
-                            <>
-							<Typography variant="body1" key={el.stat.name}>
-								{el.stat.name}
-							</Typography>
-                            <LinearProgress variant="determinate"  value={el.base_stat}/>
-                            </>
+							<>
+								<Typography variant="body1" key={el.stat.name}>
+									{el.stat.name}
+								</Typography>
+								<LinearProgress
+									variant="determinate"
+									value={el.base_stat}
+								/>
+							</>
 						))}
 					</Grid>
 				</Grid>
