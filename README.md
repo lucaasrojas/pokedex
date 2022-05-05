@@ -2,6 +2,12 @@
 
 This project was developed for a technical interview.
 
+## Requirements
+- Paginated list
+- Detail page
+- Add Pokemon (Does not use the API)
+- 
+
 ## How to use it
 
 Once the project is running (See Available Scripts section) a new tab will be opened
