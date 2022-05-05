@@ -12,8 +12,8 @@ function App() {
 			<main className="App-main">
 				<Grid container>
 					<Grid item xs={12}>
-						<PokemonGrid />
-					</Grid>
+            <PokemonGrid/>
+          </Grid>
 				</Grid>
 			</main>
 		</Box>

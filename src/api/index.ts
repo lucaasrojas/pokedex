@@ -7,8 +7,6 @@ export const getPokemonByUrl = async (url: string) => {
 };
 
 export const getPokemons = async (limit: number = 10, offset: number = 0) => {
-	let result;
-
 	const resp = await axios.get(
 		`${apiPath}pokemon?limit=${limit}&offset=${offset}`
 	);
@@ -17,7 +15,7 @@ export const getPokemons = async (limit: number = 10, offset: number = 0) => {
 		const promises = resp.data.results.map((el: any) =>
 			getPokemonByUrl(el.url).then((res) => ({ ...el, ...res.data }))
 		);
-		result = await Promise.all(promises);
+		resp.data.results = await Promise.all(promises);
 	}
-	return result;
+	return resp.data;
 };
