@@ -21,5 +21,9 @@ export const getPokemons = async (limit: number = 10, offset: number = 0) => {
 		);
 		resp.data.results = await Promise.all(promises);
 	}
+	resp.data.results = resp.data.results.map((pokemon) => ({
+		...pokemon,
+		types: pokemon.types.map(({ type }) => type.name),
+	}));
 	return resp.data;
 };

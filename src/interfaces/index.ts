@@ -16,15 +16,21 @@ export interface Stat {
 	};
 }
 
-export interface Type {
-	slot: number;
-	type: {
-		name: string;
-	};
-}
 export interface Pokemon {
 	name: string;
 	abilities: Ability[];
 	stats: Stat[];
-	types: Type[];
+	types: String[];
+}
+
+export interface IPagination {
+	count: number;
+	offset: number;
+	limit: number;
+	pages: number;
+}
+
+export interface PokemonResponse {
+	results: Pokemon[];
+	count: number;
 }

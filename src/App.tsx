@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Grid, Box } from "@mui/material";
 import { PokemonGrid, PokemonDetail } from "./Components";
 import "./App.css";

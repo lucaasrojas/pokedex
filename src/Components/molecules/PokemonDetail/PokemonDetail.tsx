@@ -1,8 +1,16 @@
 import React from "react";
-import { Grid, Paper, Typography, LinearProgress, Chip, Box, Button } from "@mui/material";
-import { Link, useParams, } from "react-router-dom";
-import { getPokemonByName } from "../api";
-import { Pokemon, Ability, Stat } from "../interfaces";
+import {
+	Grid,
+	Paper,
+	Typography,
+	LinearProgress,
+	Chip,
+	Box,
+	Button,
+} from "@mui/material";
+import { Link, useParams } from "react-router-dom";
+import { getPokemonByName } from "api";
+import { Pokemon, Ability, Stat } from "interfaces";
 
 const PokemonDetail = () => {
 	const params = useParams();
@@ -10,13 +18,21 @@ const PokemonDetail = () => {
 
 	React.useEffect(() => {
 		if (!pokemon) {
-			getPokemonByName(params.name)
-			.then((res) => setPokemon(res))
+			getPokemonByName(params.name).then((res) => setPokemon(res));
 		}
 	}, [params.name, pokemon]);
+
 	if (!pokemon) return null;
 	return (
-		<Box sx={{maxWidth: "800px", margin: "0 auto", display: "flex", alignContent: "center", flexDirection: "column"}}>
+		<Box
+			sx={{
+				maxWidth: "800px",
+				margin: "0 auto",
+				display: "flex",
+				alignContent: "center",
+				flexDirection: "column",
+			}}
+		>
 			<Paper elevation={2} sx={{ p: 2, m: 2 }}>
 				<Grid container>
 					<Grid item xs={12}>
@@ -35,7 +51,7 @@ const PokemonDetail = () => {
 
 							<Grid item container gap={2} xs={12}>
 								{pokemon.abilities.map((el: Ability) => (
-									<Grid item>
+									<Grid item key={el.ability.url}>
 										<Chip
 											key={el.ability.name}
 											label={el.ability.name.toUpperCase()}
@@ -52,7 +68,7 @@ const PokemonDetail = () => {
 								Stats
 							</Typography>
 							{pokemon.stats.map((el: Stat) => (
-								<>
+								<Box key={`progress-${el.stat.name}-${el.base_stat}`}>
 									<Typography
 										variant="body1"
 										key={el.stat.name}
@@ -60,16 +76,19 @@ const PokemonDetail = () => {
 										{el.stat.name.toUpperCase()}
 									</Typography>
 									<LinearProgress
+										data-testid={`progress-${el.stat.name}-${el.base_stat}`}
 										variant="determinate"
 										value={(el.base_stat * 100) / 500}
 									/>
-								</>
+								</Box>
 							))}
 						</Grid>
 					</Grid>
 				</Grid>
 			</Paper>
-			<Link to="/" style={{margin:"auto"}}><Button variant="contained" >Home</Button></Link>
+			<Link to="/" style={{ margin: "auto" }}>
+				<Button variant="contained">Home</Button>
+			</Link>
 		</Box>
 	);
 };

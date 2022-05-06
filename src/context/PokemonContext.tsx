@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { Pokemon } from "../interfaces";
+import { Pokemon } from "interfaces";
 
 export const PokemonContext = createContext(undefined)
 
