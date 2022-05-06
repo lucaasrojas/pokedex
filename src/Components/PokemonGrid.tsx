@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import { getPokemons } from "../api";
-import { Grid, Paper, Typography, Pagination } from "@mui/material";
-import { NumberLiteralType } from "typescript";
+import { Card, AddPokemonDialog } from "../Components";
+import { Grid, Pagination, Button, Typography } from "@mui/material";
+
 import { PokemonContext } from "../context/PokemonContext";
-interface Data {
-	results: any[];
-}
+import { Pokemon } from "../interfaces";
+import { calculateOffset, calculatePageCount } from "../utils";
+
 interface IPagination {
 	count: number;
 	offset: number;
@@ -13,22 +14,16 @@ interface IPagination {
 	pages: number;
 }
 
-const calculatePageCount = (total: number, perPage: number) => {
-	return Math.round(total / perPage);
-};
-
-const calculateOffset = (actualPage: number, perPage: number) => {
-	return Math.round(actualPage - 1) * perPage;
-};
-
 const PokemonGrid = () => {
-	const { list, setList } = useContext(PokemonContext);
+	const { list, setList,myList, setMyList } = useContext(PokemonContext);
+	const [showAddModal, setShowAddModal] = React.useState(false);
 	const [pagination, setPagination] = React.useState<IPagination>({
 		count: 0,
 		offset: 0,
 		limit: 10,
 		pages: 1,
 	});
+
 	React.useEffect(() => {
 		if (!Boolean(list?.length)) {
 			getPokemons().then((res: any) => {
@@ -60,64 +55,61 @@ const PokemonGrid = () => {
 		setPagination(newPagination);
 	};
 
+	const handleAddPokemon = (name) => {
+		setMyList([...myList, { name }]);
+		setShowAddModal(false);
+	};
+
 	if (!Boolean(list.length) || !pagination) return null;
 	return (
-		<Grid container>
+		<Grid container p={2} rowGap={2}>
+			<AddPokemonDialog
+				open={showAddModal}
+				onCancel={() => setShowAddModal(false)}
+				onConfirm={(name) => handleAddPokemon(name)}
+			/>
+			<Grid item xs={12} sx={{display: "flex", placeContent: "center"}}>
+				{
+					Boolean(myList.length) && (
+
+						<Typography variant="h6" sx={{color: "white", marginRight: 2}}>My Pokemons</Typography>
+					)
+				}
+					<Button onClick={() => setShowAddModal(true)} variant="contained" color="success">
+						Add Pokemon
+					</Button>
+			</Grid>
 			<Grid item xs={12}>
-				<Grid container>
-					{list.map((el: any) => (
-						<Grid
-							key={el.id}
-							item
-							container
-							xs={12}
-							sm={6}
-							md={4}
-							lg={3}
-							p={2}
-						>
-							<Paper elevation={2} sx={{ width: "100%", p: 2 }}>
-								<Grid item xs={12}>
-									<Typography
-										sx={{ textAlign: "center" }}
-										variant="h4"
-									>
-										{el.name.toUpperCase()}
-									</Typography>
-								</Grid>
-								<Grid item xs={12}>
-									<Typography
-										variant="subtitle1"
-										sx={{ fontWeight: "bold" }}
-									>
-										Abilities
-									</Typography>
-									{el.abilities.map((el: any) => (
-										<Typography key={el.ability.name}>
-											{el.ability.name}
-										</Typography>
-									))}
-								</Grid>
-								<Grid item xs={12}>
-									<Typography
-										variant="subtitle1"
-										sx={{ fontWeight: "bold" }}
-									>
-										Stats
-									</Typography>
-									{el.stats.map((el: any) => (
-										<Typography key={el.stat.name}>
-											{el.stat.name} - {el.base_stat}
-										</Typography>
-									))}
-								</Grid>
-							</Paper>
+				<Grid
+					container
+					sx={{
+						flexFlow: "nowrap",
+						columnGap: "5px",
+						flexDirection: "row",
+						maxWidth: "100%",
+						overflowX: "scroll"
+					}}
+				>
+					{myList.map((pokemon: Pokemon) => (
+						<Grid key={pokemon.name} item xs={2}>
+							<Card pokemon={pokemon} />
 						</Grid>
 					))}
 				</Grid>
 			</Grid>
 			<Grid item xs={12}>
+				<Grid container gap={1} sx={{ justifyContent: "center" }}>
+					{list.map((el: any) => (
+						<Grid key={el.id} item xs={12} sm={6} md={4} lg={3}>
+							<Card pokemon={el} />
+						</Grid>
+					))}
+				</Grid>
+			</Grid>
+			<Grid item xs={12} sx={{display: "flex", justifyContent: "center", color: "white"}}>
 				<Pagination
+				color="primary"
+				sx={{color:"white"}}
 					count={calculatePageCount(
 						pagination.count,
 						pagination.limit
