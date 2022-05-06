@@ -15,7 +15,7 @@ interface IPagination {
 }
 
 const PokemonGrid = () => {
-	const { list, setList,myList, setMyList } = useContext(PokemonContext);
+	const { list, setList, myList, setMyList } = useContext(PokemonContext);
 	const [showAddModal, setShowAddModal] = React.useState(false);
 	const [pagination, setPagination] = React.useState<IPagination>({
 		count: 0,
@@ -35,24 +35,17 @@ const PokemonGrid = () => {
 			});
 		}
 	}, [list, setList]);
-	React.useEffect(() => {
-		getPokemons(pagination.limit, pagination.offset).then((res: any) => {
+
+	const handlePageChange = (e, page) => {
+		const offset = calculateOffset(page, pagination.limit);
+		getPokemons(pagination.limit, offset).then((res: any) => {
 			setList(res.results);
 			setPagination((prev: any) => ({
 				...prev,
 				count: res.count,
+				pages: calculatePageCount(res.count, pagination.limit),
 			}));
 		});
-	}, [pagination]);
-
-	const handlePageChange = (e, page) => {
-		const newPagination = {
-			count: pagination.count,
-			limit: pagination.limit,
-			offset: calculateOffset(page, pagination.limit),
-			pages: calculatePageCount(pagination.count, pagination.limit),
-		};
-		setPagination(newPagination);
 	};
 
 	const handleAddPokemon = (name) => {
@@ -68,16 +61,22 @@ const PokemonGrid = () => {
 				onCancel={() => setShowAddModal(false)}
 				onConfirm={(name) => handleAddPokemon(name)}
 			/>
-			<Grid item xs={12} sx={{display: "flex", placeContent: "center"}}>
-				{
-					Boolean(myList.length) && (
-
-						<Typography variant="h6" sx={{color: "white", marginRight: 2}}>My Pokemons</Typography>
-					)
-				}
-					<Button onClick={() => setShowAddModal(true)} variant="contained" color="success">
-						Add Pokemon
-					</Button>
+			<Grid item xs={12} sx={{ display: "flex", placeContent: "center" }}>
+				{Boolean(myList.length) && (
+					<Typography
+						variant="h6"
+						sx={{ color: "white", marginRight: 2 }}
+					>
+						My Pokemons
+					</Typography>
+				)}
+				<Button
+					onClick={() => setShowAddModal(true)}
+					variant="contained"
+					color="success"
+				>
+					Add Pokemon
+				</Button>
 			</Grid>
 			<Grid item xs={12}>
 				<Grid
@@ -87,12 +86,12 @@ const PokemonGrid = () => {
 						columnGap: "5px",
 						flexDirection: "row",
 						maxWidth: "100%",
-						overflowX: "scroll"
+						overflowX: "scroll",
 					}}
 				>
 					{myList.map((pokemon: Pokemon) => (
 						<Grid key={pokemon.name} item xs={2}>
-							<Card pokemon={pokemon} />
+							<Card pokemon={pokemon} custom={true} />
 						</Grid>
 					))}
 				</Grid>
@@ -106,10 +105,18 @@ const PokemonGrid = () => {
 					))}
 				</Grid>
 			</Grid>
-			<Grid item xs={12} sx={{display: "flex", justifyContent: "center", color: "white"}}>
+			<Grid
+				item
+				xs={12}
+				sx={{
+					display: "flex",
+					justifyContent: "center",
+					color: "white",
+				}}
+			>
 				<Pagination
-				color="primary"
-				sx={{color:"white"}}
+					color="primary"
+					sx={{ color: "white" }}
 					count={calculatePageCount(
 						pagination.count,
 						pagination.limit

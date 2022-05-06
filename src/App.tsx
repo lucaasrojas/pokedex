@@ -1,14 +1,14 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import { Grid, Box } from "@mui/material";
 import { PokemonGrid, PokemonDetail } from "./Components";
 import "./App.css";
-import logo from './assets/logo.png'
+import logo from "./assets/logo.png";
 
 function App() {
 	return (
 		<Box className="App">
-			<header style={{display: "flex", placeContent: "center"}}>
-				<img src={logo} style={{maxHeight: "100px"}}/>
+			<header style={{ display: "flex", placeContent: "center" }}>
+				<img src={logo} style={{ maxHeight: "100px" }} alt="logo" />
 			</header>
 			<main className="App-main">
 				<Grid container>

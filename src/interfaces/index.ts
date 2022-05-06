@@ -15,8 +15,16 @@ export interface Stat {
 		url: string;
 	};
 }
+
+export interface Type {
+	slot: number;
+	type: {
+		name: string;
+	};
+}
 export interface Pokemon {
 	name: string;
 	abilities: Ability[];
 	stats: Stat[];
+	types: Type[];
 }
