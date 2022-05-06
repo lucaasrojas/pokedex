@@ -1,14 +1,14 @@
-import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Typography, Grid, Box } from "@mui/material";
+import { Grid, Box } from "@mui/material";
 import { PokemonGrid, PokemonDetail } from "./Components";
 import "./App.css";
+import logo from './assets/logo.png'
 
 function App() {
 	return (
 		<Box className="App">
-			<header>
-				<Typography variant="h1">Pokedex</Typography>
+			<header style={{display: "flex", placeContent: "center"}}>
+				<img src={logo} style={{maxHeight: "100px"}}/>
 			</header>
 			<main className="App-main">
 				<Grid container>
